@@ -10,9 +10,9 @@ func main(){
 
 	// 这里是用于开通自己有哪些支付方式
 	//phone.OpenWeChatPay()
-	phone.OpenAliPay()
-
-
+	//phone.OpenAliPay()
+	//phone.OpenPay("weChatPay",&WeChatPay{})
+	phone.OpenPay("aLiPay",&AliPay{})
 	err := phone.PayMoney("weChatPay",100)
 	if err != nil{
 		// 如果微信支付失败了，用支付宝支付

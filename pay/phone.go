@@ -16,6 +16,11 @@ func (p *Phone) OpenAliPay(){
 	p.PayMap["aLiPay"] = AliPay
 }
 
+func (p *Phone) OpenPay(name string,pay Pay){
+	// 可以把上面两个方法更改为这一个方法
+	p.PayMap[name] = pay
+}
+
 func (p *Phone) PayMoney(name string,money float32)(err error){
 	pay,ok:= p.PayMap[name]
 	if !ok{
