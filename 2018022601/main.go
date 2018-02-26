@@ -45,17 +45,28 @@ func judgePrimeNum(s []int)(res []int){
 		}
 		if b == true{
 			res = append(res, v)
-			//s = append(s[:k],s[k+1:]...)
 		}
 	}
-	return res
+	return
+}
+
+func getBig(s []int)(n int){
+	bigNum := s[0]
+	for i:=1;i<len(s);i++{
+		if bigNum<s[i]{
+			bigNum = s[i]
+		}
+	}
+	return bigNum
 }
 
 
 func main() {
-	s := getFactor(20)
+	s := getFactor(13195)
 	fmt.Println(s)
 	res := judgePrimeNum(s)
 	fmt.Println(res)
+	bigNum := getBig(res)
+	fmt.Println(bigNum)
 
 }
