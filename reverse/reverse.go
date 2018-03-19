@@ -17,7 +17,7 @@ func convertToSlice(str string) []rune{
 }
 
 func main() {
-	str := "hello,世界"
+	str := "-123"
 	res := convertToSlice(str)
 	fmt.Println(string(res))
 	res2 := reverse(res)
