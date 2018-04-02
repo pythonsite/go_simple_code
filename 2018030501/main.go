@@ -1,3 +1,19 @@
+/*
+给定一个范围为 32 位 int 的整数，将其颠倒。
+如
+输入: 123
+输出:  321
+
+输入: -123
+输出: -321
+
+输入: 120
+输出: 21
+
+假设我们的环境只能处理 32 位 int 范围内的整数。根据这个假设，如果颠倒后的结果超过这个范围，则返回 0。
+ */
+
+
 package main
 
 import (
@@ -27,9 +43,9 @@ func reverse(x int) int{
 	}
 	if res > math.MaxInt32{
 		return 0
-	}else{
-		return res
 	}
+	return res
+	
 }
 
 func main() {
