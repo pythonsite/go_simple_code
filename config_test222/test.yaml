@@ -1,0 +1,5 @@
+Main:
+    HttpPort: 8082
+    HttpsOn: false
+    Domain: "pythonsite.com"
+    HttpsPort: 443

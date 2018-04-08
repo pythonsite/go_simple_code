@@ -180,7 +180,7 @@ func Long2Short(req *models.Long2ShortRequest) (response *models.Long2ShortRespo
 			err = errRet
 			return
 		}
-		response.ShortUrl = shortUrl
+		response.ShortUrl = shortUrlt
 		return
 	}
 	if err != nil{
