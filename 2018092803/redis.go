@@ -8,21 +8,25 @@ import (
 func main() {
 	c, err := redis.Dial("tcp","192.168.0.116:6379")
 	if err != nil {
-		fmt.Println("conn redis failed:",err)
+		fmt.Println("conn redis err:",err)
 		return
 	}
 	fmt.Println("conn redis success")
 	defer c.Close()
-	_, err = c.Do("set","abc",100)
+
+	_, err = c.Do("mset","abc",23,"age",1212)
 	if err != nil {
-		fmt.Println("set error:",err)
+		fmt.Println("mset error:",err)
 		return
 	}
-	fmt.Println("set success")
-	r, err := redis.Int(c.Do("get","abc"))
+	fmt.Println("mset success")
+
+	r, err := redis.Ints(c.Do("mget","abc","age"))
 	if err != nil {
-		fmt.Println("get error:",err)
+		fmt.Println("redis mget err:",err)
 		return
 	}
-	fmt.Println(r)
+	for _, v := range r{
+		fmt.Println(v)
+	}
 }
