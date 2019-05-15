@@ -3,16 +3,73 @@ package iniConfig
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"reflect"
 	"strconv"
 	"strings"
 )
 
-func Marshal(data interface{})(result []byte,err error) {
+func MarshalFile(fileName string, data interface{})(err error) {
+	result, err := marshal(data)
+	if err != nil {
+		return
+	}
+	return ioutil.WriteFile(fileName,result,0755)
+}
+
+func UnmarshalFile(fileName string, result interface{})(err error) {
+	data, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		return
+	}
+	return unmarshal(data, result)
+}
+
+func marshal(data interface{})(result []byte,err error) {
+	typeInfo := reflect.TypeOf(data)
+	if typeInfo.Kind() != reflect.Struct {
+		err = errors.New("please pass struct")
+		return
+	}
+	var conf []string
+	valueInfo := reflect.ValueOf(data)
+	for i := 0;i < typeInfo.NumField();i++ {
+		sectionField := typeInfo.Field(i)
+		sectionVal := valueInfo.Field(i)
+		fieldType := sectionField.Type
+		if fieldType.Kind() != reflect.Struct {
+			continue
+		}
+		tagVal := sectionField.Tag.Get("ini")
+		if len(tagVal) == 0 {
+			tagVal = sectionField.Name
+		}
+		var section string
+		if i != 0 {
+			section = fmt.Sprintf("\n[%s]\n", tagVal)
+		}else {
+			section = fmt.Sprintf("[%s]\n", tagVal)
+		}
+		conf = append(conf, section)
+		for j :=0;j< fieldType.NumField();j++ {
+			keyField := fieldType.Field(j)
+			fieldTagval := keyField.Tag.Get("ini")
+			if len(fieldTagval) == 0 {
+				fieldTagval = keyField.Name
+			}
+			valueField := sectionVal.Field(j)
+			item := fmt.Sprintf("%s=%v\n", fieldTagval, valueField)
+			conf = append(conf, item)
+		}
+	}
+	for _, val:= range conf {
+		byteVal := []byte(val)
+		result = append(result, byteVal...)
+	}
 	return
 }
 
-func Unmarshal(data []byte, result interface{}) (err error){
+func unmarshal(data []byte, result interface{}) (err error){
 	typeInfo := reflect.TypeOf(result)
 	if typeInfo.Kind() != reflect.Ptr {
 		err = errors.New("please pass address")
@@ -84,7 +141,7 @@ func parseSection(line string, typeInfo2 reflect.Type) (fieldName string,err err
 func parseItem(lastFieldName string, line string, result interface{}) (err error) {
 	index := strings.Index(line, "=")
 	if index == -1 {
-		err = fmt.Errorf("sytax error, line:%s", line)
+		err = fmt.Errorf("sytax error not found '=' line:%s", line)
 		return
 	}
 	key := strings.TrimSpace(line[0:index])
