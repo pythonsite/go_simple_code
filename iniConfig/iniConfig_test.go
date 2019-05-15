@@ -2,7 +2,6 @@ package iniConfig
 
 import (
 	"fmt"
-	"go_simple_code"
 	"io/ioutil"
 	"testing"
 )
@@ -18,6 +17,7 @@ type MysqlConfig struct {
 	DataBase string `ini:"database"`
 	Host string	`ini:"host"`
 	Port int	`ini:"port"`
+	Timeout float32 `ini:"timeout"`
 }
 
 type Config struct {
@@ -32,11 +32,11 @@ func TestIniConfig(t *testing.T) {
 		t.Error("open file error:",err)
 	}
 	var conf Config
-	err = go_simple_code.Unmarshal(data, &conf)
+	err = Unmarshal(data, &conf)
 	if err != nil {
 		t.Fatalf("unmarshal failed, err:%v",err)
 	}
 	t.Log("unmarshall success")
-	//t.Logf("unmarshal success, conf:%v\n",conf)
+	t.Logf("unmarshal success, conf:%#v\n",conf)
 }
 
